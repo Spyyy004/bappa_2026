@@ -4,9 +4,6 @@
       const $ = id => document.getElementById(id);
       const D=$('date'), B=$('budget'), M=$('mode'), S=$('start'), R=$('route'), C=$('cards'), F=$('filters');
       if (!D || !B || !M || !S || !R || !C || !F) throw new Error('Planner UI elements are missing');
-      if (!Array.isArray(window.__BAPPA_PANDALS)) {
-        // data.js uses a classic-script const, so read it through a safe local reference below.
-      }
       const pandals = typeof PANDALS !== 'undefined' ? PANDALS : [];
       if (!pandals.length) throw new Error('Pandal data did not load');
 
@@ -49,7 +46,7 @@
           out.forEach((x,i)=>{const p=x.p,e=document.createElement('div');e.className='stop';e.innerHTML=`<div class="stoptop"><div class="num">${i+1}</div><div><h3>${p.name}</h3><div class="local">${p.localName||''}</div><div class="meta">${p.area} · ${p.nearestStation}</div><div class="chips"><span class="chip">~${x.wait} min queue</span><span class="chip">${x.t} min travel</span><span class="chip">${p.bestWindows?.[0]||'Flexible'}</span></div></div></div><div class="stop-actions"><button type="button" class="secondary view-map">View map</button><button type="button" class="secondary directions">Directions</button></div>`;e.querySelector('.view-map').onclick=()=>{if(map){map.setView([p.lat,p.lng],15);document.querySelector('.map-panel').scrollIntoView({behavior:'smooth'});}};e.querySelector('.directions').onclick=()=>window.open(`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`,'_blank');R.appendChild(e);});
           if(!out.length)R.insertAdjacentHTML('beforeend','<div class="empty">No route fits this budget. Try a longer time budget.</div>');
           $('routeMode').textContent=M.options[M.selectedIndex].text;
-        }catch(err){console.error('Bappa route error:',err);R.innerHTML=`<div class="empty"><b>Could not build the route.</b><br>${err.message}</div>`;}
+        }catch(err){console.error('PandalHop route error:',err);R.innerHTML=`<div class="empty"><b>Could not build the route.</b><br>${err.message}</div>`;}
       }
       function renderCards(area='All'){const arr=area==='All'?pandals:pandals.filter(p=>p.area===area);$('count').textContent=`${arr.length} stops`;C.innerHTML='';arr.forEach(p=>{const card=document.createElement('article');card.className='card';card.innerHTML=`<h3>${p.name}</h3><div class="local">${p.localName||''}</div><p>${p.area} · ${p.nearestStation}</p><div class="chips"><span class="chip">Est. queue ${p.queue?.mukh||15} min</span><span class="chip">Importance ${p.importance}</span></div><button type="button" class="secondary">Build from ${p.nearestStation}</button>`;card.querySelector('button').onclick=()=>{S.value=p.nearestStation;build();window.scrollTo({top:0,behavior:'smooth'});};C.appendChild(card);});}
       F.innerHTML='';['All',...new Set(pandals.map(p=>p.area))].forEach((area,i)=>{const b=document.createElement('button');b.type='button';b.className=`filter${i===0?' active':''}`;b.textContent=area;b.onclick=()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderCards(area);};F.appendChild(b);});
@@ -58,10 +55,10 @@
       $('locate').onclick=()=>{if(!navigator.geolocation){alert('Location is not available in this browser.');return;}navigator.geolocation.getCurrentPosition(pos=>{S.value='My location';build();},()=>alert('Could not access your location.'));};
       $('showMap').onclick=()=>{const panel=document.querySelector('.map-panel');panel.classList.toggle('mobile-open');if(map)setTimeout(()=>map.invalidateSize(),80);};
       build();
-      window.__BAPPA_READY__=true;
-      console.log('Bappa 26 planner ready');
+      window.__PANDALHOP_READY__=true;
+      console.log('PandalHop planner ready');
     }catch(err){
-      console.error('Bappa 26 startup error:',err);
+      console.error('PandalHop startup error:',err);
       const box=document.getElementById('route'); if(box)box.innerHTML=`<div class="empty"><b>Planner failed to start.</b><br>${err.message}</div>`;
     }
   }
