@@ -1,1 +1,12 @@
-{"name":"Bappa 26 — Mumbai Ganpati Route Planner","short_name":"Bappa 26","start_url":"/","display":"standalone","background_color":"#faf9f6","theme_color":"#111111","icons":[]}
+{
+  "name":"PandalHop — Mumbai Ganpati 2026 Darshan Planner",
+  "short_name":"PandalHop",
+  "start_url":"/",
+  "display":"standalone",
+  "background_color":"#faf9f6",
+  "theme_color":"#111111",
+  "description":"Mumbai Ganpati 2026 pandal and darshan route planner.",
+  "icons":[
+    {"src":"favicon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
